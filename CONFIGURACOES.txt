@@ -47,6 +47,28 @@ C:\ecommerce> git remote add origin https://github.com/ramoswrr/ecommerce.git
 Primeiro commit:
 C:\ecommerce> git add --all
 
+Subir para a área de memória com descrição da commit:
+C:\ecommerce> git commit -m "inicio do projeto"
+
+"Empurrar" Push para o branch master do GitHub (se for endereço https://github..., vai pedir senha para acessar o gitHub. Se for SSH não vai pedir nada):
+C:\ecommerce> git push origin master
+
+____________________________________________________________________
+4.Após inserir uma nova pasta com arquivo BD.sql na vendor, tem que avisar ao composer:
+C:\ecommerce> composer dump-autoload
+
+Corrija esse trecho no composer.json, caso o dump-autoload não consiga se autoconfigurar:
+    
+    "autoload": {
+        "psr-4": {
+            "Hcode\\": "vendor\\hcodebr\\php-classes\\src"
+        }
+    }
+
+Novamente:
+C:\ecommerce> composer dump-autoload
+____________________________________________________________________
+
 
 
 

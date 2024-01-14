@@ -1,9 +1,14 @@
 {
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "edb0d5e9e0049c45c25eb0264f0918ab",
     "packages": [
         {
             "name": "phpmailer/phpmailer",
             "version": "v5.2.22",
-            "version_normalized": "5.2.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPMailer/PHPMailer.git",
@@ -25,9 +30,7 @@
             "suggest": {
                 "league/oauth2-google": "Needed for Google XOAUTH2 authentication"
             },
-            "time": "2017-01-09T09:33:47+00:00",
             "type": "library",
-            "installation-source": "dist",
             "autoload": {
                 "classmap": [
                     "class.phpmailer.php",
@@ -65,12 +68,11 @@
                 "issues": "https://github.com/PHPMailer/PHPMailer/issues",
                 "source": "https://github.com/PHPMailer/PHPMailer/tree/master"
             },
-            "install-path": "../phpmailer/phpmailer"
+            "time": "2017-01-09T09:33:47+00:00"
         },
         {
             "name": "rain/raintpl",
             "version": "3.0.0",
-            "version_normalized": "3.0.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rainphp/raintpl3.git",
@@ -82,9 +84,7 @@
                 "reference": "5bfdf4602b8adb0e80b222fa29ac559aa9c06abf",
                 "shasum": ""
             },
-            "time": "2012-12-24T05:24:32+00:00",
             "type": "library",
-            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "Rain": "library/"
@@ -103,12 +103,11 @@
                 "issues": "https://github.com/rainphp/raintpl3/issues",
                 "source": "https://github.com/rainphp/raintpl3/tree/3.0.0"
             },
-            "install-path": "../rain/raintpl"
+            "time": "2012-12-24T05:24:32+00:00"
         },
         {
             "name": "slim/slim",
             "version": "2.0.0",
-            "version_normalized": "2.0.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/slimphp/Slim.git",
@@ -123,9 +122,7 @@
             "require": {
                 "php": ">=5.3.0"
             },
-            "time": "2012-09-09T14:54:09+00:00",
             "type": "library",
-            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "Slim": "."
@@ -153,9 +150,16 @@
                 "issues": "https://github.com/slimphp/Slim/issues",
                 "source": "https://github.com/slimphp/Slim/tree/2.0.0"
             },
-            "install-path": "../slim/slim"
+            "time": "2012-09-09T14:54:09+00:00"
         }
     ],
-    "dev": true,
-    "dev-package-names": []
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "2.6.0"
 }

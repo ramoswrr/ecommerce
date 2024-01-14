@@ -1,0 +1,54 @@
+____________________________________________________________________
+1. Criação de domínio virtual:
+
+1.1. Acrescentar esta linha no final do arquivo hosts: C:\Windows\System32\drivers\etc\hosts.ini
+    
+    127.0.0.1   www.hcodecommerce.com.br
+
+1.2. Acresecntar este código no arquivo httpd-vhosts.conf: C:\xampp\apache\conf\extra\httpd-vhosts.conf
+
+<VirtualHost *:80>
+    ServerAdmin webmaster@hcode.com.br
+    DocumentRoot "C:/ecommerce"
+    ServerName www.hcodecommerce.com.br                                 //mesmo endreço do arquivo hosts.ini
+    ErrorLog "logs/dummy-host2.example.com-error.log"
+    CustomLog "logs/dummy-host2.example.com-access.log" common
+    <Directory "C:/ecommerce">
+        Require all granted
+
+        RewriteEngine On
+
+        RewriteCond %{REQUEST_FILENAME} !-d
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteRule ^ index.php [QSA,L]
+    </Directory>
+</VirtualHost>
+
+Endereço na barra do Browser:
+http://www.hcodecommerce.com.br/
+
+____________________________________________________________________
+2. Instalar dependências do Composer na pasta do projeto:
+C:\ecommerce> composer update
+
+____________________________________________________________________
+3. Criar repositório no Git:
+C:\ecommerce> git init      //para iniciar um novo projeto
+
+Configuração na ágina do git: https://github.com/ramoswrr?tab=repositories
+
+Create a new repository: ramoswrr/ecommerce
+
+Copie a url: https://github.com/ramoswrr/ecommerce.git
+
+No terminal, digite o seguinte comando com o endereço do repositório do git: 
+C:\ecommerce> git remote add origin https://github.com/ramoswrr/ecommerce.git
+
+Primeiro commit:
+C:\ecommerce> git add --all
+
+
+
+
+
+

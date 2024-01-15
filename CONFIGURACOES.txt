@@ -76,6 +76,15 @@ C:\ecommerce> git commit -m "autoload do hcodebr classes"
 C:\ecommerce> git push origin master
 
 ____________________________________________________________________
+5. Atualizações seguintes:
+C:\ecommerce> git add --all
+
+C:\ecommerce> git commit -m "Criamos a classe Page"
+
+C:\ecommerce> git push origin master
+
+Se o cursos ficar parado depois do comando, veja se tem uma janela esperando para logar no GitHub do ramoswrr.
+____________________________________________________________________
 
 
 

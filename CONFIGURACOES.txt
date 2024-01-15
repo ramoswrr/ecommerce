@@ -68,6 +68,14 @@ Corrija esse trecho no composer.json, caso o dump-autoload não consiga se autoc
 Novamente:
 C:\ecommerce> composer dump-autoload
 ____________________________________________________________________
+5. Atualização no GitHub:
+C:\ecommerce> git add --all
+
+C:\ecommerce> git commit -m "autoload do hcodebr classes"
+
+C:\ecommerce> git push origin master
+
+____________________________________________________________________
 
 
 

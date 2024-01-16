@@ -5,12 +5,12 @@ ____________________________________________________________________
     
     127.0.0.1   www.hcodecommerce.com.br
 
-1.2. Acresecntar este código no arquivo httpd-vhosts.conf: C:\xampp\apache\conf\extra\httpd-vhosts.conf
+1.2. Acrescentar este código no arquivo httpd-vhosts.conf: C:\xampp\apache\conf\extra\httpd-vhosts.conf
 
 <VirtualHost *:80>
     ServerAdmin webmaster@hcode.com.br
     DocumentRoot "C:/ecommerce"
-    ServerName www.hcodecommerce.com.br                                 //mesmo endreço do arquivo hosts.ini
+    ServerName www.hcodecommerce.com.br                                 //mesmo endereço do arquivo hosts.ini
     ErrorLog "logs/dummy-host2.example.com-error.log"
     CustomLog "logs/dummy-host2.example.com-access.log" common
     <Directory "C:/ecommerce">
@@ -35,26 +35,26 @@ ____________________________________________________________________
 3. Criar repositório no Git:
 C:\ecommerce> git init      //para iniciar um novo projeto
 
-Configuração na ágina do git: https://github.com/ramoswrr?tab=repositories
+    Configuração na página do git: https://github.com/ramoswrr?tab=repositories
 
-Create a new repository: ramoswrr/ecommerce
+    Create a new repository: ramoswrr/ecommerce
 
-Copie a url: https://github.com/ramoswrr/ecommerce.git
+    Copie a url: https://github.com/ramoswrr/ecommerce.git
 
-No terminal, digite o seguinte comando com o endereço do repositório do git: 
+    No terminal, digite o seguinte comando com o endereço do repositório do git: 
 C:\ecommerce> git remote add origin https://github.com/ramoswrr/ecommerce.git
 
-Primeiro commit:
+    Primeiro commit:
 C:\ecommerce> git add --all
 
-Subir para a área de memória com descrição da commit:
+    Subir para a área de memória com descrição da commit:
 C:\ecommerce> git commit -m "inicio do projeto"
 
-"Empurrar" Push para o branch master do GitHub (se for endereço https://github..., vai pedir senha para acessar o gitHub. Se for SSH não vai pedir nada):
+    "Empurrar" Push para o branch master do GitHub (se for endereço https://github..., vai pedir senha para acessar o gitHub. Se for SSH não vai pedir nada):
 C:\ecommerce> git push origin master
 
 ____________________________________________________________________
-4.Após inserir uma nova pasta com arquivo BD.sql na vendor, tem que avisar ao composer:
+4.Após inserir uma nova pasta e arquivos (hcodebr\php-classes\src\DB\Sql.php) na vendor, tem que avisar ao composer:
 C:\ecommerce> composer dump-autoload
 
 Corrija esse trecho no composer.json, caso o dump-autoload não consiga se autoconfigurar:

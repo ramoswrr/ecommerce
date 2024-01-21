@@ -19,7 +19,7 @@ class Page              //Classe com mesmo nome do arquivo Page.php
 	public function __construct($opts = array(), $tpl_dir = "/views/")
     {
 		
-		$this->options = array_merge($this->defaults, $opts);
+		$this->options = array_merge($this->defaults, $opts);	//Funde os elementos de 2 ou mais arrays de forma que os elementos de um são colocados no final do array anterior. Retorna o array resultante da fusão. No merger prevalece o que mandamos pelo método no index.
 
 		$config = array(
 			"tpl_dir"       => $_SERVER["DOCUMENT_ROOT"].$tpl_dir,
@@ -35,7 +35,7 @@ class Page              //Classe com mesmo nome do arquivo Page.php
 		// 	$this->tpl->assign($key, $value);
 		// } //// chame a $this->setData()
 
-		$this->setData($this->options["data"]);
+		$this->setData($this->options["data"]);	//na posicao "data" do options temos um array com as informações da sessão. linha 25
 
 		if ($this->options["header"] === true) $this->tpl->draw("header");
 

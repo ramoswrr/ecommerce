@@ -1,3 +1,7 @@
+Git da Hcode: https://github.com/hcodebr
+Perguntas: https://github.com/hcodebr/ecommerce/issues/21
+
+Obs: O Slim Framework 2.0 funciona com PHP 5.4 até 7.4. Não funcionou com o PHP 8.
 ____________________________________________________________________
 1. Criação de domínio virtual:
 
@@ -85,7 +89,11 @@ C:\ecommerce> git push origin master
 
 Se o cursos ficar parado depois do comando, veja se tem uma janela esperando para logar no GitHub do ramoswrr.
 ____________________________________________________________________
-
+6. Sobre o Slim
+É necessário traze o arquivo .htaccess (C:\ecommerce\vendor\slim\slim\.htaccess) para a página principal do projeto.
+Este é um configurador do Apache. Ele que cria as regras para a url ser escrita.
+Para cada tipo de servidor, é necessário um arquio de configuração. Ver site do Slim.
+____________________________________________________________________
 
 
 

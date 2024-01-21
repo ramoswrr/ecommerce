@@ -1,0 +1,66 @@
+   /*  AULA 106. Admin - Login. ERROS (15/01/2024)
+    1.............................................
+    Fatal error: Uncaught Error: Call to undefined function Slim\Http\get_magic_quotes_gpc()
+    
+    Roberto Carlos
+    Resposta (2 anos atrás)
+    Entre na configuração do slim que fica no C:\sua_pasta_projeto\seu_projeto\vendor\slim\slim\Slim\Http\Util.php
+    e substitua o codigo 
+        
+        $strip = is_null($overrideStripSlashes) ? get_magic_quotes_gpc() : $overrideStripSlashes; 
+        por 
+        $strip = is_null($overrideStripSlashes) ? false : $overrideStripSlashes;
+
+    A partir da versão PHP 7.4 do php esse plugin é considerado como obsoleto, portanto, não recomendo habilita-lo no php.ini. Abs
+
+    2................................................
+    Slim Application Error
+    The application could not run because of the following error:
+
+    Details
+    Code: 1
+    Message: Usuário inexistente ou senha inválida.
+    File: C:\ecommerce\vendor\hcodebr\php-classes\src\Model\User.php
+    Line: 38
+    Trace
+    #0 C:\ecommerce\index.php(51): Hcode\Model\User::login('admin', 'admin')
+    #1 [internal function]: {closure}()
+    #2 C:\ecommerce\vendor\slim\slim\Slim\Router.php(200): call_user_func_array(Object(Closure), Array)
+    #3 C:\ecommerce\vendor\slim\slim\Slim\Slim.php(1210): Slim\Router->dispatch(Object(Slim\Route))
+    #4 C:\ecommerce\vendor\slim\slim\Slim\Middleware\Flash.php(86): Slim\Slim->call()
+    #5 C:\ecommerce\vendor\slim\slim\Slim\Middleware\MethodOverride.php(94): Slim\Middleware\Flash->call()
+    #6 C:\ecommerce\vendor\slim\slim\Slim\Middleware\PrettyExceptions.php(67): Slim\Middleware\MethodOverride->call()
+    #7 C:\ecommerce\vendor\slim\slim\Slim\Slim.php(1159): Slim\Middleware\PrettyExceptions->call()
+    #8 C:\ecommerce\index.php(61): Slim\Slim->run()
+    #9 {main}
+
+    SOLUÇÃO: !
+    
+    3................................................
+    Get e Set dinâmico
+    Rafael De Souza · Aula 106 · 5 anos atrás
+    Olá, já assisti a aula 'trocentas' vezes más não consegui pegar a lógica da classe Model. 
+    No método mágico __call, ele espera dois parâmetros, más só é passado um, de onde vem o $name?
+    Como o método setData está conversando com a __call()?
+    O getValues() está retornando um array como por exemplo "id" = 1, "deslogin" = admin?
+    Pensei em fazer manual e ignorar esse método, porém eu vi que ele é muuuuuuuito prático e poupa muuuuito tempo, esforço e código.
+    Se puder me explicar nos mínimos detalhes e de forma cronológica do acontecimento dos eventos eu vou ficar muito agradecido.(como se fosse um debug) =)
+
+    Hcode — Instrutor
+    Resposta
+    Obrigado pela pergunta
+    Podemos ajudar, claro
+    Então, vamos por partes, não é mesmo?
+    1 - O método __call() é um método mágico do PHP que é chamado toda vez que executamos uma função, seja qual for
+    O parâmetro $name é o nome da função e $args é o que foi passado dentro desta função. Exemplo:
+    $this->setdesperson('Rafael');
+    Neste exemplo, $name é o setdesperson e $args é 'Rafael'
+    Você pode ver mais sobre esse método neste link: https://secure.php.net/manual/en/language.oop5.overloading.php#object.call
+
+    2 - O método setData() chama várias vezes as funções set de maneira dinâmica, por meio desta linha:
+    $this->{"set".$key}($value);
+    O nome da função e o valor passado vêm do foreach(). Ao executar a função, o método __call() é chamado. Essa é a relação que eles possuem
+    
+    3 - Isso mesmo, o getValues() retorna um array com os valores do objeto
+    Anthony Rafael - SUPORTE
+    */

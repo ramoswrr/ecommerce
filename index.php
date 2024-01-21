@@ -1,5 +1,5 @@
 <?php 
-
+session_start();
 require_once("vendor/autoload.php");
 
 use \Slim\Slim;
@@ -15,6 +15,8 @@ $app->config('debug', true);
 
 //_____________________________________ endereço: http://www.hcodecommerce.com.br/admin
 $app->get('/admin', function() {
+
+	User::verifyLogin();		//Para verificar se o usuário estpá logado.
 
 	$page = new PageAdmin();
 	$page->setTpl("index");		//Chama o "index", que se refere ao arquivo \views\admin\index.html
@@ -45,7 +47,7 @@ $app->get('/admin/login', function() {
 
 });
 
-//_____________________________________ endereço: http://www.hcodecommerce.com.br/admin/login
+
 $app->post('/admin/login', function() {
 
 	User::login($_POST["login"], $_POST["password"]);
@@ -55,6 +57,14 @@ $app->post('/admin/login', function() {
 });
 
 
+//_____________________________________ endereço: http://www.hcodecommerce.com.br/admin/logout
+$app->get('/admin/logout', function() {
+
+	User::logout();
+	header("Location: /admin/login");
+	exit;	
+
+});
 
 //___________________________________________________________
 

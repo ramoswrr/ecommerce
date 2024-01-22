@@ -30,7 +30,7 @@ class Category extends Model {
 
 		$this->setData($results[0]);
 
-		//Category::updateFile();
+		Category::updateFile();
 
 	}
 
@@ -58,11 +58,11 @@ class Category extends Model {
 			':idcategory'=>$this->getidcategory()
 		]);
 
-		//Category::updateFile();
+		Category::updateFile();
 
 	}
 
-	/*
+	
 	public static function updateFile()
 	{
 
@@ -74,10 +74,15 @@ class Category extends Model {
 			array_push($html, '<li><a href="/categories/'.$row['idcategory'].'">'.$row['descategory'].'</a></li>');
 		}
 
+		//Salvar o arquivo com o conteúdo de $html: file_put_contents( caminho_físico, string )
+		//$_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR = diretório principal \ecommerce
+		//. "views" . DIRECTORY_SEPARATOR . "categories-menu.html" = \ecommerce\views\categories-menu.html
+		//implode converte um array para string.
 		file_put_contents($_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . "views" . DIRECTORY_SEPARATOR . "categories-menu.html", implode('', $html));
 
 	}
 
+	/*
 	public function getProducts($related = true)
 	{
 

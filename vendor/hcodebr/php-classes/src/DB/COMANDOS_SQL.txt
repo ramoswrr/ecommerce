@@ -1,0 +1,9 @@
+1......................
+TRUNCATE TABLE
+
+Em SQL, TRUNCATE TABLE é um comando que remove todas as linhas de uma tabela sem registrar as exclusões de linhas individuais. Este comando é mais rápido que DELETE FROM porque não gera um log de exclusões de linhas individuais e redefine quaisquer contadores de incremento automático para seus valores iniciais12.
+
+Aqui está um exemplo de como usar o comando TRUNCATE TABLE para remover todas as linhas de uma tabela chamada my_table:
+TRUNCATE TABLE minha_tabela;
+
+2.....................

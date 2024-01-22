@@ -6,12 +6,12 @@ use \Slim\Slim;
 use \Hcode\Page;
 use \Hcode\PageAdmin;
 use \Hcode\Model\User;
+use \Hcode\Model\Category;
 
 //___________________________________________________________
 $app = new Slim();
 
 $app->config('debug', true);
-
 
 
 //_____________________________________ endereço: http://www.hcodecommerce.com.br/admin/login
@@ -45,7 +45,6 @@ $app->get('/admin/logout', function() {
 });
 
 
-
 //Se acessar via get, a resposta será com um html.
 $app->get("/admin/users/create", function() {		
 
@@ -73,7 +72,6 @@ $app->get("/admin/users/:iduser/delete", function($iduser) {
 	exit;
 
 });
-
 
 
 $app->get("/admin/users/:iduser", function($iduser) {
@@ -185,6 +183,7 @@ $app->get("/admin/forgot/sent", function(){
 
 });
 
+
 $app->get("/admin/forgot/reset", function(){
 
 	$user = User::validForgotDecrypt($_GET["code"]);
@@ -200,6 +199,7 @@ $app->get("/admin/forgot/reset", function(){
 	));
 
 });
+
 
 $app->post("/admin/forgot/reset", function(){
 
@@ -226,6 +226,7 @@ $app->post("/admin/forgot/reset", function(){
 
 });
 
+
 //_____________________________________ endereço: http://www.hcodecommerce.com.br/admin
 $app->get('/admin', function() {
 
@@ -236,7 +237,6 @@ $app->get('/admin', function() {
 	$page->setTpl("index");		//Chama o "index", que se refere ao arquivo \views\admin\index.html
 
 });
-
 
 
 //_____________________________________ endereço: http://www.hcodecommerce.com.br/
@@ -250,6 +250,99 @@ $app->get('/', function() {
 	$page->setTpl("index");		//Chama o "index", que se refere ao arquivo \views\index.html
 
 });
+
+
+//_____________________________________ endereço: http://www.hcodecommerce.com.br/admin/categories
+$app->get("/admin/categories", function(){
+
+	$categories = Category::listAll();
+
+	$page = new PageAdmin();
+
+	$page->setTpl("categories", [
+		'categories'=>$categories,
+	]);
+
+});
+
+
+$app->get("/admin/categories/create", function(){
+
+	User::verifyLogin();
+
+	$page = new PageAdmin();
+
+	$page->setTpl("categories-create");	
+
+});
+
+
+$app->post("/admin/categories/create", function(){
+
+	User::verifyLogin();
+
+	$category = new Category();
+
+	$category->setData($_POST);
+
+	$category->save();
+
+	header('Location: /admin/categories');
+	exit;
+
+});
+
+
+$app->get("/admin/categories/:idcategory/delete", function($idcategory){
+
+	User::verifyLogin();
+
+	$category = new Category();
+
+	$category->get((int)$idcategory);
+
+	$category->delete();
+
+	header('Location: /admin/categories');
+	exit;
+
+});
+
+
+$app->get("/admin/categories/:idcategory", function($idcategory){
+
+	User::verifyLogin();
+
+	$category = new Category();
+
+	$category->get((int)$idcategory);
+
+	$page = new PageAdmin();
+
+	$page->setTpl("categories-update", [
+		'category'=>$category->getValues()
+	]);	
+
+});
+
+
+$app->post("/admin/categories/:idcategory", function($idcategory){
+
+	User::verifyLogin();
+
+	$category = new Category();
+
+	$category->get((int)$idcategory);
+
+	$category->setData($_POST);
+
+	$category->save();	
+
+	header('Location: /admin/categories');
+	exit;
+
+});
+
 
 
 //___________________________________________________________

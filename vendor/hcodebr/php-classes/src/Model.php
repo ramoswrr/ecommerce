@@ -18,7 +18,8 @@ class Model
 		{
 			case "get":
 				//return $this->values[$fieldName];
-                return (isset($this->values[$fieldName])) ? $this->values[$fieldName] : NULL;	//Aula 109. Estou inserindo, e ainda não tem idcategories, mas o método save() já busca o idcategories para inserir. Este idcategories não existe dentro do array, por isso dá um índice indefinido. Só existe no banco. Assim, eu preciso fazer uma validação aqui dentro.
+                return (isset($this->values[$fieldName])) ? $this->values[$fieldName] : NULL;	
+				//Aula 109. Estou inserindo, e ainda não tem idcategories, mas o método save() já busca o idcategories para inserir. Este idcategories não existe dentro do array, por isso dá um índice indefinido. Só existe no banco. Assim, eu preciso fazer uma validação aqui dentro.
 			break;
 
 			case "set":

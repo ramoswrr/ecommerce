@@ -82,7 +82,7 @@ class Category extends Model {
 
 	}
 
-	/*
+	
 	public function getProducts($related = true)
 	{
 
@@ -117,6 +117,7 @@ class Category extends Model {
 		}
 
 	}
+
 
 	public function getProductsPage($page = 1, $itemsPerPage = 8)
 	{
@@ -169,7 +170,9 @@ class Category extends Model {
 		]);
 
 	}
-			
+
+
+	/*			
 	public static function getPage($page = 1, $itemsPerPage = 10)
 	{
 

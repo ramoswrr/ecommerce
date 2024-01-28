@@ -16,6 +16,58 @@ class User extends Model
     const SECRET = "HcodePhp7_Secret";
     const SECRET_IV = "HcodePhp7_Secret_IV";
 
+
+	public static function getFromSession()
+	{
+
+		$user = new User();
+
+		if (isset($_SESSION[User::SESSION]) && (int)$_SESSION[User::SESSION]['iduser'] > 0) {
+
+			$user->setData($_SESSION[User::SESSION]);
+
+		}
+
+		return $user;
+
+	}
+
+
+	public static function checkLogin($inadmin = true)
+	{
+
+		if (
+			!isset($_SESSION[User::SESSION])
+			||
+			!$_SESSION[User::SESSION]
+			||
+			!(int)$_SESSION[User::SESSION]["iduser"] > 0
+		) {
+			//Não está logado
+			return false;
+
+		} else {
+
+			if ($inadmin === true && (bool)$_SESSION[User::SESSION]['inadmin'] === true) {
+
+				return true;
+
+			} else if ($inadmin === false) {
+
+				return true;
+
+			} else {
+
+				return false;
+
+			}
+
+		}
+
+	}
+
+
+
     public static function login($login, $password)
     {
         $sql = new Sql();
@@ -61,18 +113,29 @@ class User extends Model
 	public static function verifyLogin($inadmin = true) 
 	{
 
-		if (   !isset($_SESSION[User::SESSION])                 //Se a sessão não for definida
-            || !$_SESSION[User::SESSION]                        //ou se a sessão for falsa
-            || !(int)$_SESSION[User::SESSION]["iduser"] > 0   //ou se o iduser que está dentro da sessão não for maior que 0. obs: (int) é para casting. 
-            || (bool)$_SESSION[User::SESSION]["inadmin"] !== $inadmin   //verificar se está logado na administração, porque se for um usuário da loja, não pode entrar na área de adm.
-            )
-            //(casting é o processo de converter um valor de um tipo de dados para outro. Por exemplo, se você tem uma variável $x que contém um valor inteiro e deseja convertê-la em uma string, você pode fazer um cast da variável $x para string usando a sintaxe (string) $x ).
-        {
+		if (!User::checkLogin($inadmin)) {
 
-            header("Location: /admin/login");       //Redirecionar para a tela de login
-            exit;
+			if ($inadmin) {
+				header("Location: /admin/login");
+			} else {
+				header("Location: /login");
+			}
+			exit;
 
 		}
+		
+		// if (   !isset($_SESSION[User::SESSION])                 //Se a sessão não for definida
+        //     || !$_SESSION[User::SESSION]                        //ou se a sessão for falsa
+        //     || !(int)$_SESSION[User::SESSION]["iduser"] > 0   //ou se o iduser que está dentro da sessão não for maior que 0. obs: (int) é para casting. 
+        //     || (bool)$_SESSION[User::SESSION]["inadmin"] !== $inadmin   //verificar se está logado na administração, porque se for um usuário da loja, não pode entrar na área de adm.
+        //     )
+        //     //(casting é o processo de converter um valor de um tipo de dados para outro. Por exemplo, se você tem uma variável $x que contém um valor inteiro e deseja convertê-la em uma string, você pode fazer um cast da variável $x para string usando a sintaxe (string) $x ).
+        // {
+
+        //     header("Location: /admin/login");       //Redirecionar para a tela de login
+        //     exit;
+
+		// }
 
 	}
 

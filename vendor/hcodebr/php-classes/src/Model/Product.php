@@ -149,32 +149,32 @@ class Product extends Model {
 
 	}
 
-	// public function getFromURL($desurl)
-	// {
+	public function getFromURL($desurl)
+	{
 
-	// 	$sql = new Sql();
+		$sql = new Sql();
 
-	// 	$rows = $sql->select("SELECT * FROM tb_products WHERE desurl = :desurl LIMIT 1", [
-	// 		':desurl'=>$desurl
-	// 	]);
+		$rows = $sql->select("SELECT * FROM tb_products WHERE desurl = :desurl LIMIT 1", [
+			':desurl'=>$desurl
+		]);
 
-	// 	$this->setData($rows[0]);
+		$this->setData($rows[0]);
 
-	// }
+	}
 
-	// public function getCategories()
-	// {
+	public function getCategories()
+	{
 
-	// 	$sql = new Sql();
+		$sql = new Sql();
 
-	// 	return $sql->select("
-	// 		SELECT * FROM tb_categories a INNER JOIN tb_productscategories b ON a.idcategory = b.idcategory WHERE b.idproduct = :idproduct
-	// 	", [
+		return $sql->select("
+			SELECT * FROM tb_categories a INNER JOIN tb_productscategories b ON a.idcategory = b.idcategory WHERE b.idproduct = :idproduct
+		", [
 
-	// 		':idproduct'=>$this->getidproduct()
-	// 	]);
+			':idproduct'=>$this->getidproduct()
+		]);
 
-	// }
+	}
 
 	// public static function getPage($page = 1, $itemsPerPage = 10)
 	// {

@@ -29,20 +29,33 @@ $app->get('/', function() {
 
 
 
-$app->get("/categories/:idcategory", function($idcategory){		/////////////////////////
+$app->get("/categories/:idcategory", function($idcategory){
+
+	$page = (isset($_GET['page'])) ? (int)$_GET['page'] : 1;
 
 	$category = new Category();
 
 	$category->get((int)$idcategory);
 
+	$pagination = $category->getProductsPage($page, 8);
+
+	$pages = [];
+
+	for ($i=1; $i <= $pagination['pages']; $i++) { 
+		array_push($pages, [
+			'link'=>'/categories/'.$category->getidcategory().'?page='.$i,
+			'page'=>$i
+		]);
+	}
+
 	$page = new Page();
 
 	$page->setTpl("category", [
 		'category'=>$category->getValues(),
-		'products'=>Product::checkList($category->getProducts())	//O método estático Product::checkList vai verificar se cada foto do produto foi feita o upload. 
+		'products'=>$pagination["data"],
+		'pages'=>$pages
 	]);
 
 });
-
 
 ?>

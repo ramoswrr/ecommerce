@@ -126,6 +126,7 @@ class Category extends Model {
 
 		$sql = new Sql();
 
+		//SQL_CALC_FOUND_ROWS = função do MySQL que retorna o número de registros da tabela e p insere numa tabela tamporaria, que pode ser cahamada por "SELECT FOUND_ROWS() AS nrtotal;"
 		$results = $sql->select("
 			SELECT SQL_CALC_FOUND_ROWS *
 			FROM tb_products a
@@ -139,6 +140,7 @@ class Category extends Model {
 
 		$resultTotal = $sql->select("SELECT FOUND_ROWS() AS nrtotal;");
 
+		//ceil = função PHP que converte o número arredondando para cima.
 		return [
 			'data'=>Product::checkList($results),
 			'total'=>(int)$resultTotal[0]["nrtotal"],

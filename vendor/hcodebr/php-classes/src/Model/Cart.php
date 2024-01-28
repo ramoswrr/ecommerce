@@ -6,6 +6,7 @@ use \Hcode\DB\Sql;
 use \Hcode\Model;
 use \Hcode\Mailer;
 use \Hcode\Model\User;
+use stdClass;
 
 class Cart extends Model {
 
@@ -113,7 +114,8 @@ class Cart extends Model {
 
 	}
 
-	public function addProduct(Product $product)		//Ele recebe uma instância da classe mais a váriável com o produto
+	//Ele recebe uma instância da classe mais a váriável com o produto
+	public function addProduct(Product $product)
 	{
 
 		$sql = new Sql();
@@ -126,6 +128,7 @@ class Cart extends Model {
 		$this->getCalculateTotal();
 
 	}
+
 
 	public function removeProduct(Product $product, $all = false)
 	{
@@ -152,6 +155,7 @@ class Cart extends Model {
 
 	}
 
+
 	public function getProducts()
 	{
 
@@ -172,151 +176,217 @@ class Cart extends Model {
 
 	}
 
-	// public function getProductsTotals()
-	// {
-
-	// 	$sql = new Sql();
-
-	// 	$results = $sql->select("
-	// 		SELECT SUM(vlprice) AS vlprice, SUM(vlwidth) AS vlwidth, SUM(vlheight) AS vlheight, SUM(vllength) AS vllength, SUM(vlweight) AS vlweight, COUNT(*) AS nrqtd
-	// 		FROM tb_products a
-	// 		INNER JOIN tb_cartsproducts b ON a.idproduct = b.idproduct
-	// 		WHERE b.idcart = :idcart AND dtremoved IS NULL;
-	// 	", [
-	// 		':idcart'=>$this->getidcart()
-	// 	]);
-
-	// 	if (count($results) > 0) {
-	// 		return $results[0];
-	// 	} else {
-	// 		return [];
-	// 	}
-
-	// }
-
-	// public function setFreight($nrzipcode)
-	// {
-
-	// 	$nrzipcode = str_replace('-', '', $nrzipcode);
-
-	// 	$totals = $this->getProductsTotals();
-
-	// 	if ($totals['nrqtd'] > 0) {
-
-	// 		if ($totals['vlheight'] < 2) $totals['vlheight'] = 2;
-	// 		if ($totals['vllength'] < 16) $totals['vllength'] = 16;
-
-	// 		$qs = http_build_query([
-	// 			'nCdEmpresa'=>'',
-	// 			'sDsSenha'=>'',
-	// 			'nCdServico'=>'40010',
-	// 			'sCepOrigem'=>'09853120',
-	// 			'sCepDestino'=>$nrzipcode,
-	// 			'nVlPeso'=>$totals['vlweight'],
-	// 			'nCdFormato'=>'1',
-	// 			'nVlComprimento'=>$totals['vllength'],
-	// 			'nVlAltura'=>$totals['vlheight'],
-	// 			'nVlLargura'=>$totals['vlwidth'],
-	// 			'nVlDiametro'=>'0',
-	// 			'sCdMaoPropria'=>'S',
-	// 			'nVlValorDeclarado'=>$totals['vlprice'],
-	// 			'sCdAvisoRecebimento'=>'S'
-	// 		]);
-
-	// 		$xml = simplexml_load_file("http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx/CalcPrecoPrazo?".$qs);
-
-	// 		$result = $xml->Servicos->cServico;
-
-	// 		if ($result->MsgErro != '') {
-
-	// 			Cart::setMsgError($result->MsgErro);
-
-	// 		} else {
-
-	// 			Cart::clearMsgError();
-
-	// 		}
-
-	// 		$this->setnrdays($result->PrazoEntrega);
-	// 		$this->setvlfreight(Cart::formatValueToDecimal($result->Valor));
-	// 		$this->setdeszipcode($nrzipcode);
-
-	// 		$this->save();
-
-	// 		return $result;
-
-	// 	} else {
 
 
+	public function getProductsTotals()
+	{
 
-	// 	}
+		$sql = new Sql();
 
-	// }
+		$results = $sql->select("
+			SELECT SUM(vlprice) AS vlprice, SUM(vlwidth) AS vlwidth, SUM(vlheight) AS vlheight, SUM(vllength) AS vllength, SUM(vlweight) AS vlweight, COUNT(*) AS nrqtd
+			FROM tb_products a
+			INNER JOIN tb_cartsproducts b ON a.idproduct = b.idproduct
+			WHERE b.idcart = :idcart AND dtremoved IS NULL;
+		", [
+			':idcart'=>$this->getidcart()
+		]);
 
-	// public static function formatValueToDecimal($value):float
-	// {
+		if (count($results) > 0) {
+			return $results[0];
+		} else {
+			return [];
+		}
 
-	// 	$value = str_replace('.', '', $value);
-	// 	return str_replace(',', '.', $value);
+	}
 
-	// }
 
-	// public static function setMsgError($msg)
-	// {
+	////////////////////////////////////////////Atenção: vários comentários
+	public function setFreight($nrzipcode)
+	{
 
-	// 	$_SESSION[Cart::SESSION_ERROR] = $msg;
+		$nrzipcode = str_replace('-', '', $nrzipcode);
 
-	// }
+		$totals = $this->getProductsTotals();
 
-	// public static function getMsgError()
-	// {
+		/*
+		A função http_build_query() é uma função embutida no PHP que é usada para gerar uma string de consulta codificada em URL a partir de um array associativo (ou indexado).
+		A função recebe um array ou objeto contendo propriedades. Se o parâmetro data for um array, este pode ser de estrutura simples de uma dimensão, ou um array multidimensional (que por sua vez pode conter outros arrays). Se data for um objeto, então somente propriedades públicas serão incorporadas ao resultado 1.
+		A função http_build_query() retorna um string no formato de uma URL.
 
-	// 	$msg = (isset($_SESSION[Cart::SESSION_ERROR])) ? $_SESSION[Cart::SESSION_ERROR] : "";
+		Aqui está um exemplo de uso da função http_build_query():
+		$data = array (
+			'foo' => 'bar',
+			'baz' => 'boom',
+			'cow' => 'milk',
+			'null' => null,
+			'php' => 'hypertext processor'
+		);
+		echo http_build_query($data) . "\n";
+		echo http_build_query($data, '', '&');
+		O exemplo acima produzirá:
+		foo=bar&baz=boom&cow=milk&null&php=hypertext+processor
+		foo=bar&baz=boom&cow=milk&php=hypertext+processor
 
-	// 	Cart::clearMsgError();
+		Os argumentos a serem passados estão no arquivo \res\Manual-de-Implementacao-do-Calculo-Remoto-de-Precos-e-Prazos-Correios.pdf
+		*/
 
-	// 	return $msg;
+		if ($totals['nrqtd'] > 0) {
 
-	// }
+			if ($totals['vlheight'] < 2) $totals['vlheight'] = 2;			//Altura: 2cm é o mínimo que os Correios permitem. Por isso, esse teste.
+			if ($totals['vllength'] < 16) $totals['vllength'] = 16;			//Comprimento: 16cm é o mínimo.
 
-	// public static function clearMsgError()
-	// {
+			$qs = http_build_query([
+				'nCdEmpresa'=>'',
+				'sDsSenha'=>'',
+				'nCdServico'=>'40010',
+				'sCepOrigem'=>'09853120',
+				'sCepDestino'=>$nrzipcode,
+				'nVlPeso'=>$totals['vlweight'],
+				'nCdFormato'=>'1',
+				'nVlComprimento'=>$totals['vllength'],
+				'nVlAltura'=>$totals['vlheight'],
+				'nVlLargura'=>$totals['vlwidth'],
+				'nVlDiametro'=>'0',
+				'sCdMaoPropria'=>'S',
+				'nVlValorDeclarado'=>$totals['vlprice'],
+				'sCdAvisoRecebimento'=>'S'
+			]);
 
-	// 	$_SESSION[Cart::SESSION_ERROR] = NULL;
+			/*
+			A função simplexml_load_file é uma função em PHP que converte um documento XML bem-formado em um objeto. Ela interpreta um arquivo XML e o transforma em um objeto SimpleXMLElement. Para utilizá-la, basta passar o caminho para o arquivo XML como parâmetro. É possível utilizar o parâmetro opcional class_name para retornar um objeto da classe especificada. Esta classe deve estender SimpleXMLElement. A função pode retornar um objeto da classe SimpleXMLElement com propriedades contendo os dados do documento XML, ou false em caso de falha 1.
+			Por exemplo, o seguinte código lê um arquivo XML chamado test.xml e imprime o título do elemento raiz:
+			if (file_exists('test.xml')) {
+				$xml = simplexml_load_file('test.xml');
+				echo $xml->title;
+			} else {
+				exit ('Falha ao abrir test.xml.');
+			}
+			*/
+			
+			//////////// $xml = simplexml_load_file("http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx/CalcPrecoPrazo?".$qs); //retorna um objeto
+			//Atenção: Link não funciona.Testado em 28-01-2024. Rever forma de consultar os Correios.
+			//Utilize um Array com informações estáticas, só para ver o sistema funcionar, e depois transforme-o em objeto com json_decode.
+			
+			$xml_array = 
+			'{
+				"Servicos": 
+				{
+					"cServico": 
+					{
+						"Codigo": "40010",
+						"Valor": "53,877",
+						"PrazoEntrega": "1",
+						"ValorMaoPropria": "5,90",
+						"ValorAvisoRecebimento": "4,30",
+						"ValorValorDeclarado": "27,57",
+						"EntregaDomiciliar": "S",
+						"EntregaSabado": "S",
+						"Erro": "0",
+						"MsgErro": "",
+						"ValorSemAdicionais": "16,10",
+						"obsFim": ""
+					}
+				}
+			}';
+			
+			$xml = json_decode($xml_array);
 
-	// }
+			$result = $xml->Servicos->cServico;
 
-	// public function updateFreight()
-	// {
+			if ($result->MsgErro != '') {
 
-	// 	if ($this->getdeszipcode() != '') {
+				Cart::setMsgError($result->MsgErro);
 
-	// 		$this->setFreight($this->getdeszipcode());
+			} else {
 
-	// 	}
+				Cart::clearMsgError();
 
-	// }
+			}
 
-	// public function getValues()
-	// {
+			$this->setnrdays($result->PrazoEntrega);
+			$this->setvlfreight(Cart::formatValueToDecimal($result->Valor));
+			$this->setdeszipcode($nrzipcode);
 
-	// 	$this->getCalculateTotal();
+			$this->save();
 
-	// 	return parent::getValues();
+			return $result;
 
-	// }
+		} else {
 
-	// public function getCalculateTotal()
-	// {
 
-	// 	$this->updateFreight();
 
-	// 	$totals = $this->getProductsTotals();
+		}
 
-	// 	$this->setvlsubtotal($totals['vlprice']);
-	// 	$this->setvltotal($totals['vlprice'] + (float)$this->getvlfreight());
+	}
 
-	// }
+
+	public static function formatValueToDecimal($value):float
+	{
+
+		$value = str_replace('.', '', $value);
+		return str_replace(',', '.', $value);
+
+	}
+
+
+	public static function setMsgError($msg)
+	{
+
+		$_SESSION[Cart::SESSION_ERROR] = $msg;
+
+	}
+
+	public static function getMsgError()
+	{
+
+		$msg = (isset($_SESSION[Cart::SESSION_ERROR])) ? $_SESSION[Cart::SESSION_ERROR] : "";
+
+		Cart::clearMsgError();
+
+		return $msg;
+
+	}
+
+
+	public static function clearMsgError()
+	{
+
+		$_SESSION[Cart::SESSION_ERROR] = NULL;
+
+	}
+
+	public function updateFreight()
+	{
+
+		if ($this->getdeszipcode() != '') {
+
+			$this->setFreight($this->getdeszipcode());
+
+		}
+
+	}
+
+	public function getValues()
+	{
+
+		$this->getCalculateTotal();
+
+		return parent::getValues();
+
+	}
+
+	public function getCalculateTotal()
+	{
+
+		$this->updateFreight();
+
+		$totals = $this->getProductsTotals();
+
+		$this->setvlsubtotal($totals['vlprice']);
+		$this->setvltotal($totals['vlprice'] + (float)$this->getvlfreight());
+
+	}
 
 }
 

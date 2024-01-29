@@ -15,6 +15,7 @@ class User extends Model
     const SESSION = "User";
     const SECRET = "HcodePhp7_Secret";
     const SECRET_IV = "HcodePhp7_Secret_IV";
+	const ERROR = "UserError";
 
 
 	public static function getFromSession()
@@ -89,7 +90,10 @@ class User extends Model
 
             //$user->setiduser($data["iduser"]); //o médtodo __call($name, $args) da classe Model vai identificar que se tratar de um set (que "seta" o atributo iduser)
 
-            $user->setData($data);          //ao invés de passar cada campo (iduser, despassaword...), vamos criar o método que faça isso para buscar todos os campos.
+            //$data['desperson'] = utf8_encode($data['desperson']); //utf8_encode id deprecated
+			$data['desperson'] = iconv('ISO-8859-1', 'UTF-8', $data['desperson']);
+
+			$user->setData($data);          //ao invés de passar cada campo (iduser, despassaword...), vamos criar o método que faça isso para buscar todos os campos.
 
             // var_dump($user);
             // exit;
@@ -163,10 +167,11 @@ class User extends Model
 
 		$sql = new Sql();
 
+		//":desperson"=>utf8_decode($this->getdesperson()), // utf8_decode is deprecated
 		$results = $sql->select("CALL sp_users_save(:desperson, :deslogin, :despassword, :desemail, :nrphone, :inadmin)", array(
-			":desperson"=>$this->getdesperson(),
+			":desperson"=>mb_convert_encoding($this->getdesperson(), 'UTF-8', 'ISO-8859-1'), 
             ":deslogin"=>$this->getdeslogin(),
-            ":despassword"=>$this->getdespassword(),
+            ":despassword"=>User::getPasswordHash($this->getdespassword()),
             ":desemail"=>$this->getdesemail(),
             ":nrphone"=>$this->getnrphone(),
             ":inadmin"=>$this->getinadmin()
@@ -209,6 +214,10 @@ class User extends Model
 			":iduser"=>$iduser
 		));
 
+		$data = $results[0];
+		//$data['desperson'] = utf8_encode($data['desperson']); //utf8_encode id deprecated
+		$data['desperson'] = iconv('ISO-8859-1', 'UTF-8', $data['desperson']);
+
 		$this->setData($results[0]);
 
 	}
@@ -220,11 +229,12 @@ class User extends Model
 		$sql = new Sql();
 
         //Essa Call chama uma Procedure que atualiza duas tabelas de uma vez (tb_users e tb_persons)
+		//":desperson"=>utf8_decode($this->getdesperson()), // utf8_decode is deprecated
 		$results = $sql->select("CALL sp_usersupdate_save(:iduser, :desperson, :deslogin, :despassword, :desemail, :nrphone, :inadmin)", array(
 			":iduser"=>$this->getiduser(),
-            ":desperson"=>$this->getdesperson(),
+            ":desperson"=>mb_convert_encoding($this->getdesperson(), 'UTF-8', 'ISO-8859-1'),
             ":deslogin"=>$this->getdeslogin(),
-            ":despassword"=>$this->getdespassword(),
+            ":despassword"=>User::getPasswordHash($this->getdespassword()),
             ":desemail"=>$this->getdesemail(),
             ":nrphone"=>$this->getnrphone(),
             ":inadmin"=>$this->getinadmin()
@@ -384,6 +394,34 @@ class User extends Model
 		return password_hash($password, PASSWORD_DEFAULT, [
 			'cost'=>12
 		]);
+
+	}
+
+
+	public static function getError()
+	{
+
+		$msg = (isset($_SESSION[User::ERROR]) && $_SESSION[User::ERROR]) ? $_SESSION[User::ERROR] : '';
+
+		User::clearError();
+
+		return $msg;
+
+	}
+
+
+	public static function clearError()
+	{
+
+		$_SESSION[User::ERROR] = NULL;
+
+	}
+
+
+	public static function setError($msg)
+	{
+
+		$_SESSION[User::ERROR] = $msg;
 
 	}
 

@@ -95,6 +95,7 @@
                                 <div class="cart_totals ">
 
                                     <h2>Resumo da Compra</h2>
+                                    <p><i>Obs: Frete com valor estático. Veja o método setFreight da classe Cart.</i></p>
 
                                     <table cellspacing="0">
                                         <tbody>
@@ -112,6 +113,7 @@
                                                 <th>Total</th>
                                                 <td><strong><span class="amount">R$<?php echo formatPrice($cart["vltotal"]); ?></span></strong> </td>
                                             </tr>
+
                                         </tbody>
                                     </table>
                                 </div>

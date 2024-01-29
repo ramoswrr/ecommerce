@@ -12,10 +12,12 @@ use \Hcode\Mailer;
 class User extends Model 
 {
 
-    const SESSION = "User";
-    const SECRET = "HcodePhp7_Secret";
-    const SECRET_IV = "HcodePhp7_Secret_IV";
+	const SESSION = "User";
+	const SECRET = "HcodePhp7_Secret";
+	const SECRET_IV = "HcodePhp7_Secret_IV";
 	const ERROR = "UserError";
+	const ERROR_REGISTER = "UserErrorRegister";
+	const SUCCESS = "UserSucesss";
 
 
 	public static function getFromSession()
@@ -86,12 +88,12 @@ class User extends Model
         
         if( password_verify($password, $data["despassword"]) === true)  //Se a senha digitada corresponde a senha criptografada do bd.
         {
-            $user = new User();       //Criando uma intância dentro da própria classe. Vai trazer os métodos de Model, pois User extende de Model.
+            $user = new User();       //Criando uma instância dentro da própria classe. Vai trazer os métodos de Model, pois User extende de Model.
 
-            //$user->setiduser($data["iduser"]); //o médtodo __call($name, $args) da classe Model vai identificar que se tratar de um set (que "seta" o atributo iduser)
+            //$user->setiduser($data["iduser"]); //o método __call($name, $args) da classe Model vai identificar que se tratar de um set (que "seta" o atributo iduser)
 
             //$data['desperson'] = utf8_encode($data['desperson']); //utf8_encode id deprecated
-			$data['desperson'] = iconv('ISO-8859-1', 'UTF-8', $data['desperson']);
+			//$data['desperson'] = iconv('ISO-8859-1', 'UTF-8', $data['desperson']);
 
 			$user->setData($data);          //ao invés de passar cada campo (iduser, despassaword...), vamos criar o método que faça isso para buscar todos os campos.
 
@@ -168,8 +170,9 @@ class User extends Model
 		$sql = new Sql();
 
 		//":desperson"=>utf8_decode($this->getdesperson()), // utf8_decode is deprecated
+		//":desperson"=>mb_convert_encoding($this->getdesperson(), 'UTF-8', 'ISO-8859-1'), 
 		$results = $sql->select("CALL sp_users_save(:desperson, :deslogin, :despassword, :desemail, :nrphone, :inadmin)", array(
-			":desperson"=>mb_convert_encoding($this->getdesperson(), 'UTF-8', 'ISO-8859-1'), 
+			":desperson"=>$this->getdesperson(), 
             ":deslogin"=>$this->getdeslogin(),
             ":despassword"=>User::getPasswordHash($this->getdespassword()),
             ":desemail"=>$this->getdesemail(),
@@ -216,9 +219,9 @@ class User extends Model
 
 		$data = $results[0];
 		//$data['desperson'] = utf8_encode($data['desperson']); //utf8_encode id deprecated
-		$data['desperson'] = iconv('ISO-8859-1', 'UTF-8', $data['desperson']);
+		//$data['desperson'] = iconv('ISO-8859-1', 'UTF-8', $data['desperson']);
 
-		$this->setData($results[0]);
+		$this->setData($data);
 
 	}
 
@@ -230,9 +233,10 @@ class User extends Model
 
         //Essa Call chama uma Procedure que atualiza duas tabelas de uma vez (tb_users e tb_persons)
 		//":desperson"=>utf8_decode($this->getdesperson()), // utf8_decode is deprecated
+		//":desperson"=>mb_convert_encoding($this->getdesperson(), 'UTF-8', 'ISO-8859-1'),
 		$results = $sql->select("CALL sp_usersupdate_save(:iduser, :desperson, :deslogin, :despassword, :desemail, :nrphone, :inadmin)", array(
 			":iduser"=>$this->getiduser(),
-            ":desperson"=>mb_convert_encoding($this->getdesperson(), 'UTF-8', 'ISO-8859-1'),
+            ":desperson"=>$this->getdesperson(),
             ":deslogin"=>$this->getdeslogin(),
             ":despassword"=>User::getPasswordHash($this->getdespassword()),
             ":desemail"=>$this->getdesemail(),
@@ -424,6 +428,52 @@ class User extends Model
 		$_SESSION[User::ERROR] = $msg;
 
 	}
+
+
+	public static function setErrorRegister($msg)
+	{
+
+		$_SESSION[User::ERROR_REGISTER] = $msg;
+
+	}
+
+
+	public static function getErrorRegister()
+	{
+
+		$msg = (isset($_SESSION[User::ERROR_REGISTER]) && $_SESSION[User::ERROR_REGISTER]) ? $_SESSION[User::ERROR_REGISTER] : '';
+
+		User::clearErrorRegister();
+
+		return $msg;
+
+	}
+
+
+	public static function clearErrorRegister()
+	{
+
+		$_SESSION[User::ERROR_REGISTER] = NULL;
+
+	}
+
+
+
+	public static function checkLoginExist($login)
+	{
+
+		$sql = new Sql();
+
+		$results = $sql->select("SELECT * FROM tb_users WHERE deslogin = :deslogin", [
+			':deslogin'=>$login
+		]);
+
+		return (count($results) > 0);
+
+	}
+
+
+
 
 }
 

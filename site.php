@@ -267,7 +267,9 @@ $app->post("/checkout", function(){
 
 	$order->save();
 
-	header("Location:/order".$order->getidorder());
+	$cart->removeSession();
+
+	header("Location: /order/".$order->getidorder());
 	exit;
 
 });

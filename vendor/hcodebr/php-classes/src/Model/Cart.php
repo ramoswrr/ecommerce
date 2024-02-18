@@ -62,6 +62,12 @@ class Cart extends Model {
 
 	}
 
+	public function removeSession()
+	{
+		$_SESSION[Cart::SESSION] = NULL;
+		session_regenerate_id();
+	}
+
 	public function getFromSessionID()
 	{
 

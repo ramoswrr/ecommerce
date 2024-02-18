@@ -29,73 +29,102 @@ class Address extends Model {
 
 	}
 
-	// public function loadFromCEP($nrcep)
-	// {
+	public function loadFromCEP($nrcep)
+	{
 
-	// 	$data = Address::getCEP($nrcep);
+		$data = Address::getCEP($nrcep);
 
-	// 	if (isset($data['logradouro']) && $data['logradouro']) {
+		if (isset($data['logradouro']) && $data['logradouro']) {
 
-	// 		$this->setdesaddress($data['logradouro']);
-	// 		$this->setdescomplement($data['complemento']);
-	// 		$this->setdesdistrict($data['bairro']);
-	// 		$this->setdescity($data['localidade']);
-	// 		$this->setdesstate($data['uf']);
-	// 		$this->setdescountry('Brasil');
-	// 		$this->setdeszipcode($nrcep);
+			$this->setdesaddress($data['logradouro']);
+			$this->setdescomplement($data['complemento']);
+			$this->setdesdistrict($data['bairro']);
+			$this->setdescity($data['localidade']);
+			$this->setdesstate($data['uf']);
+			$this->setdescountry('Brasil');
+			$this->setdeszipcode($nrcep);
 
-	// 	}
+		}
 
-	// }
+	}
 
-	// public function save()
-	// {
+	public function save()
+	{
 
-	// 	$sql = new Sql();
+		$sql = new Sql();
 
-	// 	$results = $sql->select("CALL sp_addresses_save(:idaddress, :idperson, :desaddress, :desnumber, :descomplement, :descity, :desstate, :descountry, :deszipcode, :desdistrict)", [
-	// 		':idaddress'=>$this->getidaddress(),
-	// 		':idperson'=>$this->getidperson(),
-	// 		':desaddress'=>utf8_decode($this->getdesaddress()),
-	// 		':desnumber'=>$this->getdesnumber(),
-	// 		':descomplement'=>utf8_decode($this->getdescomplement()),
-	// 		':descity'=>utf8_decode($this->getdescity()),
-	// 		':desstate'=>utf8_decode($this->getdesstate()),
-	// 		':descountry'=>utf8_decode($this->getdescountry()),
-	// 		':deszipcode'=>$this->getdeszipcode(),
-	// 		':desdistrict'=>$this->getdesdistrict()
-	// 	]);
+		$results = $sql->select("CALL sp_addresses_save(:idaddress, :idperson, :desaddress, :desnumber, :descomplement, :descity, :desstate, :descountry, :deszipcode, :desdistrict)", [
+			':idaddress'=>$this->getidaddress(),
+			':idperson'=>$this->getidperson(),
+			':desaddress'=>$this->getdesaddress(),
+			':desnumber'=>$this->getdesnumber(),
+			':descomplement'=>$this->getdescomplement(),
+			':descity'=>$this->getdescity(),
+			':desstate'=>$this->getdesstate(),
+			':descountry'=>$this->getdescountry(),
+			':deszipcode'=>$this->getdeszipcode(),
+			':desdistrict'=>$this->getdesdistrict()
+		]);
 
-	// 	if (count($results) > 0) {
-	// 		$this->setData($results[0]);
-	// 	}
+		////Obs: utf8_decode is deprecated
+		////Alterando a classe Sql é possível padronizar as inserções com utf8 (...array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")); )
+		// $results = $sql->select("CALL sp_addresses_save(:idaddress, :idperson, :desaddress, :desnumber, :descomplement, :descity, :desstate, :descountry, :deszipcode, :desdistrict)", [
+		// 	':idaddress'=>$this->getidaddress(),
+		// 	':idperson'=>$this->getidperson(),
+		// 	':desaddress'=>utf8_decode($this->getdesaddress()),
+		// 	':desnumber'=>$this->getdesnumber(),
+		// 	':descomplement'=>utf8_decode($this->getdescomplement()),
+		// 	':descity'=>utf8_decode($this->getdescity()),
+		// 	':desstate'=>utf8_decode($this->getdesstate()),
+		// 	':descountry'=>utf8_decode($this->getdescountry()),
+		// 	':deszipcode'=>$this->getdeszipcode(),
+		// 	':desdistrict'=>$this->getdesdistrict()
+		// ]);
 
-	// }
+		////Obs: substituindo utf8_decode por mb_convert_encoding
+		// $results = $sql->select("CALL sp_addresses_save(:idaddress, :idperson, :desaddress, :desnumber, :descomplement, :descity, :desstate, :descountry, :deszipcode, :desdistrict)", [
+		// 	':idaddress'=>$this->getidaddress(),
+		// 	':idperson'=>$this->getidperson(),
+		// 	':desaddress'=>mb_convert_encoding($this->getdesaddress(), "Windows-1252", "UTF-8"),
+		// 	':desnumber'=>$this->getdesnumber(),
+		// 	':descomplement'=>mb_convert_encoding($this->getdescomplement(), "Windows-1252", "UTF-8"),
+		// 	':descity'=>mb_convert_encoding($this->getdescity(), "Windows-1252", "UTF-8"),
+		// 	':desstate'=>mb_convert_encoding($this->getdesstate(), "Windows-1252", "UTF-8"),
+		// 	':descountry'=>mb_convert_encoding($this->getdescountry(), "Windows-1252", "UTF-8"),
+		// 	':deszipcode'=>$this->getdeszipcode(),
+		// 	':desdistrict'=>$this->getdesdistrict()
+		// ]);
 
-	// public static function setMsgError($msg)
-	// {
+		if (count($results) > 0) {
+			$this->setData($results[0]);
+		}
 
-	// 	$_SESSION[Address::SESSION_ERROR] = $msg;
+	}
 
-	// }
+	public static function setMsgError($msg)
+	{
 
-	// public static function getMsgError()
-	// {
+		$_SESSION[Address::SESSION_ERROR] = $msg;
 
-	// 	$msg = (isset($_SESSION[Address::SESSION_ERROR])) ? $_SESSION[Address::SESSION_ERROR] : "";
+	}
 
-	// 	Address::clearMsgError();
+	public static function getMsgError()
+	{
 
-	// 	return $msg;
+		$msg = (isset($_SESSION[Address::SESSION_ERROR])) ? $_SESSION[Address::SESSION_ERROR] : "";
 
-	// }
+		Address::clearMsgError();
 
-	// public static function clearMsgError()
-	// {
+		return $msg;
 
-	// 	$_SESSION[Address::SESSION_ERROR] = NULL;
+	}
 
-	// }
+	public static function clearMsgError()
+	{
+
+		$_SESSION[Address::SESSION_ERROR] = NULL;
+
+	}
 
 }
 

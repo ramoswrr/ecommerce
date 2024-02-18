@@ -1,0 +1,11 @@
+Usuário: JoÃ£o Rangel
+Senha: admin
+e-mail: admin@hcode.com.br
+
+Usuário: Suporte
+Senha: abcdef
+e-mail: suporte@hcode.com.br
+
+Usuário: Wagner Ribeiro
+Senha: 123456
+e-mail: wagnerribeiro@gmail.com

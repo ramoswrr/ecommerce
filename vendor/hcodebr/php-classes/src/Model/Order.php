@@ -55,95 +55,95 @@ class Order extends Model {
 
 	}
 
-	// public static function listAll()
-	// {
+	public static function listAll()
+	{
 
-	// 	$sql = new Sql();
+		$sql = new Sql();
 
-	// 	return $sql->select("
-	// 		SELECT * 
-	// 		FROM tb_orders a 
-	// 		INNER JOIN tb_ordersstatus b USING(idstatus) 
-	// 		INNER JOIN tb_carts c USING(idcart)
-	// 		INNER JOIN tb_users d ON d.iduser = a.iduser
-	// 		INNER JOIN tb_addresses e USING(idaddress)
-	// 		INNER JOIN tb_persons f ON f.idperson = d.idperson
-	// 		ORDER BY a.dtregister DESC
-	// 	");
+		return $sql->select("
+			SELECT * 
+			FROM tb_orders a 
+			INNER JOIN tb_ordersstatus b USING(idstatus) 
+			INNER JOIN tb_carts c USING(idcart)
+			INNER JOIN tb_users d ON d.iduser = a.iduser
+			INNER JOIN tb_addresses e USING(idaddress)
+			INNER JOIN tb_persons f ON f.idperson = d.idperson
+			ORDER BY a.dtregister DESC
+		");
 
-	// }
+	}
 
-	// public function delete()
-	// {
+	public function delete()
+	{
 
-	// 	$sql = new Sql();
+		$sql = new Sql();
 
-	// 	$sql->query("DELETE FROM tb_orders WHERE idorder = :idorder", [
-	// 		':idorder'=>$this->getidorder()
-	// 	]);
+		$sql->query("DELETE FROM tb_orders WHERE idorder = :idorder", [
+			':idorder'=>$this->getidorder()
+		]);
 
-	// }
+	}
 
-	// public function getCart():Cart
-	// {
+	public function getCart():Cart
+	{
 
-	// 	$cart = new Cart();
+		$cart = new Cart();
 
-	// 	$cart->get((int)$this->getidcart());
+		$cart->get((int)$this->getidcart());
 
-	// 	return $cart;
+		return $cart;
 
-	// }
+	}
 
-	// public static function setError($msg)
-	// {
+	public static function setError($msg)
+	{
 
-	// 	$_SESSION[Order::ERROR] = $msg;
+		$_SESSION[Order::ERROR] = $msg;
 
-	// }
+	}
 
-	// public static function getError()
-	// {
+	public static function getError()
+	{
 
-	// 	$msg = (isset($_SESSION[Order::ERROR]) && $_SESSION[Order::ERROR]) ? $_SESSION[Order::ERROR] : '';
+		$msg = (isset($_SESSION[Order::ERROR]) && $_SESSION[Order::ERROR]) ? $_SESSION[Order::ERROR] : '';
 
-	// 	Order::clearError();
+		Order::clearError();
 
-	// 	return $msg;
+		return $msg;
 
-	// }
+	}
 
-	// public static function clearError()
-	// {
+	public static function clearError()
+	{
 
-	// 	$_SESSION[Order::ERROR] = NULL;
+		$_SESSION[Order::ERROR] = NULL;
 
-	// }
+	}
 
-	// public static function setSuccess($msg)
-	// {
+	public static function setSuccess($msg)
+	{
 
-	// 	$_SESSION[Order::SUCCESS] = $msg;
+		$_SESSION[Order::SUCCESS] = $msg;
 
-	// }
+	}
 
-	// public static function getSuccess()
-	// {
+	public static function getSuccess()
+	{
 
-	// 	$msg = (isset($_SESSION[Order::SUCCESS]) && $_SESSION[Order::SUCCESS]) ? $_SESSION[Order::SUCCESS] : '';
+		$msg = (isset($_SESSION[Order::SUCCESS]) && $_SESSION[Order::SUCCESS]) ? $_SESSION[Order::SUCCESS] : '';
 
-	// 	Order::clearSuccess();
+		Order::clearSuccess();
 
-	// 	return $msg;
+		return $msg;
 
-	// }
+	}
 
-	// public static function clearSuccess()
-	// {
+	public static function clearSuccess()
+	{
 
-	// 	$_SESSION[Order::SUCCESS] = NULL;
+		$_SESSION[Order::SUCCESS] = NULL;
 
-	// }
+	}
 
 	// public static function getPage($page = 1, $itemsPerPage = 10)
 	// {

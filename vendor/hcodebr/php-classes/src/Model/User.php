@@ -71,49 +71,85 @@ class User extends Model
 
 
 
-    public static function login($login, $password)
-    {
-        $sql = new Sql();
+    // public static function login($login, $password)
+    // {
+    //     $sql = new Sql();
 
-        $results = $sql->select("SELECT * FROM tb_users WHERE deslogin = :LOGIN", array(
-            ":LOGIN"=>$login
-            ));
+    //     $results = $sql->select("SELECT * FROM tb_users WHERE deslogin = :LOGIN", array(
+    //         ":LOGIN"=>$login
+    //         ));
 
-        if (count($results) === 0)
-        {
-            throw new \Exception("Usuário inexistente ou senha inválida.", 1);     //Como é uma classe nativa do php, insirir \Exception
-        }
+    //     if (count($results) === 0)
+    //     {
+    //         throw new \Exception("Usuário inexistente ou senha inválida.", 1);     //Como é uma classe nativa do php, insirir \Exception
+    //     }
 
-        $data = $results[0];
+    //     $data = $results[0];
         
-        if( password_verify($password, $data["despassword"]) === true)  //Se a senha digitada corresponde a senha criptografada do bd.
-        {
-            $user = new User();       //Criando uma instância dentro da própria classe. Vai trazer os métodos de Model, pois User extende de Model.
+    //     if( password_verify($password, $data["despassword"]) === true)  //Se a senha digitada corresponde a senha criptografada do bd.
+    //     {
+    //         $user = new User();       //Criando uma instância dentro da própria classe. Vai trazer os métodos de Model, pois User extende de Model.
 
-            //$user->setiduser($data["iduser"]); //o método __call($name, $args) da classe Model vai identificar que se tratar de um set (que "seta" o atributo iduser)
+    //         //$user->setiduser($data["iduser"]); //o método __call($name, $args) da classe Model vai identificar que se tratar de um set (que "seta" o atributo iduser)
 
-            //$data['desperson'] = utf8_encode($data['desperson']); //utf8_encode id deprecated
-			//$data['desperson'] = iconv('ISO-8859-1', 'UTF-8', $data['desperson']);
+    //         //$data['desperson'] = utf8_encode($data['desperson']); //utf8_encode id deprecated
+	// 		//$data['desperson'] = iconv('ISO-8859-1', 'UTF-8', $data['desperson']);
 
-			$user->setData($data);          //ao invés de passar cada campo (iduser, despassaword...), vamos criar o método que faça isso para buscar todos os campos.
+	// 		$user->setData($data);          //ao invés de passar cada campo (iduser, despassaword...), vamos criar o método que faça isso para buscar todos os campos.
 
-            // var_dump($user);
-            // exit;
+    //         // var_dump($user);
+    //         // exit;
 
-            //Para funcionar um login vc precisa criar uma sessão. Em outras páginas precisa verificar se essa sessão já existe. Se ela existir, quer dizer que está logado. Se não, vamos redirecionar para página de login.
-            //Vamos definir o nome. Esse nome será uma constante da própria classe por questão de organização e para o caso de usar em outros lugares nós usaremos a constante que ficará em um lugar só.
-            //dentro da sessão vamos colocar só os dados desse objeto usuário como um array, que será trazido pelo método getValues().
-            $_SESSION[User::SESSION] = $user->getValues();   
+    //         //Para funcionar um login vc precisa criar uma sessão. Em outras páginas precisa verificar se essa sessão já existe. Se ela existir, quer dizer que está logado. Se não, vamos redirecionar para página de login.
+    //         //Vamos definir o nome. Esse nome será uma constante da própria classe por questão de organização e para o caso de usar em outros lugares nós usaremos a constante que ficará em um lugar só.
+    //         //dentro da sessão vamos colocar só os dados desse objeto usuário como um array, que será trazido pelo método getValues().
+    //         $_SESSION[User::SESSION] = $user->getValues();   
 
-            return $user;
+    //         return $user;
 
-        }
-        else
-        {
-            throw new \Exception("Usuário inexistente ou senha inválida.", 1);
-        }
+    //     }
+    //     else
+    //     {
+    //         throw new \Exception("Usuário inexistente ou senha inválida.", 1);
+    //     }
 
-    }
+    // }
+
+	public static function login($login, $password)
+	{
+
+		$sql = new Sql();
+
+		$results = $sql->select("SELECT * FROM tb_users a INNER JOIN tb_persons b ON a.idperson = b.idperson WHERE a.deslogin = :LOGIN", array(
+			":LOGIN"=>$login
+		)); 
+
+		if (count($results) === 0)
+		{
+			throw new \Exception("Usuário inexistente ou senha inválida.");
+		}
+
+		$data = $results[0];
+
+		if (password_verify($password, $data["despassword"]) === true)
+		{
+
+			$user = new User();
+
+			//$data['desperson'] = utf8_encode($data['desperson']); //'utf8_encode' is deprecated
+			$data['desperson'] = $data['desperson'];
+
+			$user->setData($data);
+
+			$_SESSION[User::SESSION] = $user->getValues();
+
+			return $user;
+
+		} else {
+			throw new \Exception("Usuário inexistente ou senha inválida.");
+		}
+
+	}
 
 
 	public static function verifyLogin($inadmin = true) 
@@ -220,6 +256,7 @@ class User extends Model
 		$data = $results[0];
 		//$data['desperson'] = utf8_encode($data['desperson']); //utf8_encode id deprecated
 		//$data['desperson'] = iconv('ISO-8859-1', 'UTF-8', $data['desperson']);
+		$data['desperson'] = $data['desperson'];
 
 		$this->setData($data);
 
@@ -505,6 +542,28 @@ class User extends Model
 
 	}
 
+
+	public function getOrders()
+	{
+
+		$sql = new Sql();
+
+		$results = $sql->select("
+			SELECT * 
+			FROM tb_orders a 
+			INNER JOIN tb_ordersstatus b USING(idstatus) 
+			INNER JOIN tb_carts c USING(idcart)
+			INNER JOIN tb_users d ON d.iduser = a.iduser
+			INNER JOIN tb_addresses e USING(idaddress)
+			INNER JOIN tb_persons f ON f.idperson = d.idperson
+			WHERE a.iduser = :iduser
+		", [
+			':iduser'=>$this->getiduser()
+		]);
+
+		return $results;
+
+	}
 
 
 

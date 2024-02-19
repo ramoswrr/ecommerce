@@ -470,17 +470,17 @@ $app->post("/profile", function(){
 
 	$user = User::getFromSession();
 
-	// if ($_POST['desemail'] !== $user->getdesemail()) {
+	if ($_POST['desemail'] !== $user->getdesemail()) {
 
-	// 	if (User::checkLoginExists($_POST['desemail']) === true) {
+		if (User::checkLoginExist($_POST['desemail']) === true) {
 
-	// 		User::setError("Este endereço de e-mail já está cadastrado.");
-	// 		header('Location: /profile');
-	// 		exit;
+			User::setError("Este endereço de e-mail já está cadastrado.");
+			header('Location: /profile');
+			exit;
 
-	// 	}
+		}
 
-	// }
+	}
 
 	$_POST['inadmin'] = $user->getinadmin();
 	$_POST['despassword'] = $user->getdespassword();
@@ -588,5 +588,47 @@ $app->get("/boleto/:idorder", function($idorder){
 	require_once($path . "layout_itau.php");
 
 });
+
+
+//_____________________________________ endereço: http://www.hcodecommerce.com.br/profile/orders
+$app->get("/profile/orders", function(){
+
+	User::verifyLogin(false);
+
+	$user = User::getFromSession();
+
+	$page = new Page();
+
+	$page->setTpl("profile-orders", [
+		'orders'=>$user->getOrders()
+	]);
+
+});
+
+
+$app->get("/profile/orders/:idorder", function($idorder){
+
+	User::verifyLogin(false);
+
+	$order = new Order();
+
+	$order->get((int)$idorder);
+
+	$cart = new Cart();
+
+	$cart->get((int)$order->getidcart());
+
+	$cart->getCalculateTotal();
+
+	$page = new Page();
+
+	$page->setTpl("profile-orders-detail", [
+		'order'=>$order->getValues(),
+		'cart'=>$cart->getValues(),
+		'products'=>$cart->getProducts()
+	]);	
+
+});
+
 
 ?>

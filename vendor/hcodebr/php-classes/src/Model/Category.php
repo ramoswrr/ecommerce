@@ -174,7 +174,7 @@ class Category extends Model {
 	}
 
 
-	/*			
+			
 	public static function getPage($page = 1, $itemsPerPage = 10)
 	{
 
@@ -225,7 +225,7 @@ class Category extends Model {
 		];
 
 	}
-*/
+
 
 
 }

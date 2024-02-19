@@ -7,18 +7,45 @@ use \Hcode\Model\User;
 //_____________________________________
 $app->get("/admin/users", function() {
 
-	User::verifyLogin();		//Para verificar se o usuário estpá logado.
-	
-	$users = User::listAll();	//Traz o array com toda lista de usuários do bd.
-	
+	User::verifyLogin();
+
+	$search = (isset($_GET['search'])) ? $_GET['search'] : "";
+	$page = (isset($_GET['page'])) ? (int)$_GET['page'] : 1;
+
+	if ($search != '') {
+
+		$pagination = User::getPageSearch($search, $page);
+
+	} else {
+
+		$pagination = User::getPage($page);
+
+	}
+
+	$pages = [];
+
+	for ($x = 0; $x < $pagination['pages']; $x++)
+	{
+
+		array_push($pages, [
+			'href'=>'/admin/users?'.http_build_query([
+				'page'=>$x+1,
+				'search'=>$search
+			]),
+			'text'=>$x+1
+		]);
+
+	}
+
 	$page = new PageAdmin();
-	
+
 	$page->setTpl("users", array(
-		"users"=>$users				//Passamos o array de usuários para o template users.html.
-	));		
+		"users"=>$pagination['data'],
+		"search"=>$search,
+		"pages"=>$pages
+	));
 
 });
-
 
 //_____________________________________ Se acessar via get, a resposta será com um html.
 $app->get("/admin/users/create", function() {		
